@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MetaFlora Exchange - Ultra Flashy Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Chart.js for charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Particles.js for animated background -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <style>
+    /* Global Reset & Base Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    /* Force custom cannabis leaf cursor for html and body */
+    html, body {
+      cursor: url('cannabis_leaf.png') 16 16, auto;
+    }
+    
+    /* Animated Particle Background Container */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      top: 0;
+      left: 0;
+    }
+    
+    /* Animated Gradient Backgrounds */
+    body.light-mode {
+      background: linear-gradient(45deg, #fff, #f0f2f5, #cce7ff, #e0ffe0);
+      background-size: 400% 400%;
+      animation: gradientBGLight 15s ease infinite;
+      color: #333;
+    }
+    @keyframes gradientBGLight {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    
+    body.dark-mode {
+      background: linear-gradient(45deg, #1b1b2f, #4e4e8c, #8a2be2, #ff69b4);
+      background-size: 400% 400%;
+      animation: gradientBGDark 15s ease infinite;
+      color: #e0e0e0;
+    }
+    @keyframes gradientBGDark {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    
+    /* Custom Scrollbar (WebKit) */
+    ::-webkit-scrollbar { width: 12px; }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(45deg, purple, green, pink);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, pink, green, purple);
+      border-radius: 6px;
+    }
+    
+    /* Header Marquee with Glitch Effect (Updated Colors) */
+    .header-marquee {
+      background: rgba(0, 0, 0, 0.95);
+      padding: 14px 25px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+      text-align: center;
+      border-bottom: 2px solid #ffd700;
+      position: relative;
+      overflow: hidden;
+    }
+    .header-marquee marquee {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6em;
+      /* Updated to purple base with green & pink shadows */
+      color: #8a2be2;
+      text-shadow: 2px 2px #4caf50, -2px -2px #ff69b4;
+      animation: glitch 2s infinite;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 2px #4caf50, -2px -2px #ff69b4; }
+      50% { text-shadow: -2px -2px #4caf50, 2px 2px #ff69b4; }
+      100% { text-shadow: 2px 2px #4caf50, -2px -2px #ff69b4; }
+    }
+    
+    /* Main Layout */
+    .main-layout {
+      display: flex;
+      flex-wrap: wrap;
+      min-height: calc(100vh - 80px);
+      padding-top: 80px; /* To ensure header is visible */
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      flex: 0 0 260px;
+      padding: 20px;
+      border-right: 2px solid rgba(255,255,255,0.3);
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light-mode .sidebar {
+      background: rgba(255,255,255,0.95);
+      color: #153e21;
+    }
+    body.dark-mode .sidebar {
+      background: #2e2e3a;
+      color: #e0e0e0;
+    }
+    .sidebar h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3em;
+      margin-bottom: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      padding-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .sidebar ul { list-style: none; margin-bottom: 20px; }
+    .sidebar li {
+      margin-bottom: 10px;
+      padding: 8px;
+      border-bottom: 1px dashed rgba(255,255,255,0.2);
+      transition: color 0.3s;
+    }
+    
+    /* Content Area */
+    .content {
+      flex: 1;
+      padding: 30px 40px;
+      background: rgba(255,255,255,0.98);
+      color: #333;
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark-mode .content {
+      background: #2e2e3a;
+      color: #e0e0e0;
+    }
+    .content header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .content header img.logo {
+      width: 90px;
+      margin-right: 25px;
+      filter: drop-shadow(3px 3px 4px rgba(0,0,0,0.6));
+    }
+    .content header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3em;
+      color: #153e21;
+      transition: color 0.3s;
+    }
+    body.dark-mode .content header h1 {
+      color: #a0ffa0;
+    }
+    
+    /* Tab Bar */
+    .tab-bar {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .tab-bar button {
+      background: #fff;
+      color: #153e21;
+      border: none;
+      padding: 14px 30px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .tab-bar button:hover {
+      background: #4caf50;
+      transform: translateY(-3px);
+      color: #fff;
+    }
+    .tab-bar button.active {
+      background: #4caf50;
+      color: #fff;
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    body.dark-mode .tab-bar button {
+      background: #555;
+      color: #e0e0e0;
+    }
+    body.dark-mode .tab-bar button.active {
+      background: #8a2be2;
+      color: #fff;
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+    
+    /* Shared Button Style */
+    .btn {
+      background: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 16px 35px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+      font-family: 'Orbitron', sans-serif;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      margin: 15px 0;
+    }
+    .btn:hover {
+      background: #388e3c;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    
+    /* Containers (Tabs) */
+    .swap-container, .limitorder-container, .liquidity-container,
+    .pools-container, .tokens-container, .transactions-container {
+      background: rgba(255,255,255,0.99);
+      color: #333;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      display: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark-mode .swap-container,
+    body.dark-mode .limitorder-container,
+    body.dark-mode .liquidity-container,
+    body.dark-mode .pools-container,
+    body.dark-mode .tokens-container,
+    body.dark-mode .transactions-container {
+      background: #2e2e3a;
+      color: #e0e0e0;
+    }
+    .swap-container h2, .limitorder-container h2, .liquidity-container h2,
+    .pools-container h2, .tokens-container h2, .transactions-container h2 {
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 25px;
+      color: #153e21;
+      transition: color 0.3s;
+    }
+    body.dark-mode .swap-container h2,
+    body.dark-mode .limitorder-container h2,
+    body.dark-mode .liquidity-container h2,
+    body.dark-mode .pools-container h2,
+    body.dark-mode .tokens-container h2,
+    body.dark-mode .transactions-container h2 {
+      color: #a0ffa0;
+    }
+    
+    /* Section Title for Subsections */
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8em;
+      color: #153e21;
+      margin-top: 20px;
+    }
+    body.dark-mode .section-title {
+      color: #f0f0f0;
+    }
+    
+    /* Input Groups */
+    .swap-input, .liquidity-input, .limit-input {
+      display: flex;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    .swap-input label,
+    .liquidity-input label,
+    .limit-input label {
+      width: 150px;
+      font-weight: bold;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .swap-input input, 
+    .liquidity-input input,
+    .limit-input input,
+    .swap-input select,
+    .liquidity-input select,
+    .limit-input select {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+      transition: background 0.3s, border 0.3s;
+    }
+    body.dark-mode .swap-input input,
+    body.dark-mode .liquidity-input input,
+    body.dark-mode .limit-input input,
+    body.dark-mode .swap-input select,
+    body.dark-mode .liquidity-input select,
+    body.dark-mode .limit-input select {
+      background: #444;
+      border: 1px solid #666;
+      color: #e0e0e0;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+    th, td {
+      padding: 14px;
+      border: 1px solid #ddd;
+      text-align: center;
+      font-size: 1em;
+    }
+    th {
+      background: #f4f4f4;
+      color: #153e21;
+    }
+    body.dark-mode th {
+      background: #555;
+      color: #e0e0e0;
+    }
+    
+    /* Option Groups */
+    .lock-options, .fee-options, .range-options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 25px 0;
+    }
+    .option {
+      background: #fff;
+      color: #153e21;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      min-width: 110px;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .option:hover {
+      background: #e0f2f1;
+      transform: translateY(-3px);
+    }
+    .option.active {
+      background: #4caf50;
+      color: #fff;
+      transform: scale(1.1);
+    }
+    
+    /* Custom Range Inputs */
+    .custom-range {
+      display: none;
+      margin-top: 20px;
+      justify-content: center;
+      gap: 20px;
+    }
+    .custom-range input {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+      width: 45%;
+    }
+    body.dark-mode .custom-range input {
+      background: #444;
+      border: 1px solid #666;
+      color: #e0e0e0;
+    }
+    
+    /* Switch Button */
+    #switchButton {
+      background: #fff;
+      color: #153e21;
+      border: 1px solid #ccc;
+      font-size: 1.7em;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      margin: 15px auto;
+      transition: transform 0.3s;
+      display: block;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    #switchButton:hover {
+      transform: rotate(180deg);
+    }
+    
+    /* Mode Toggle Button (Bottom Right) */
+    #modeToggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #4caf50;
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      font-family: 'Orbitron', sans-serif;
+      z-index: 1000;
+      transition: background 0.3s;
+    }
+    #modeToggle:hover {
+      background: #388e3c;
+    }
+    
+    /* Responsive Adjustments */
+    @media(max-width: 768px) {
+      .main-layout { flex-direction: column; }
+      .sidebar { width: 100%; border-right: none; border-bottom: 2px solid rgba(255,255,255,0.3); }
+      .content { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+      .limit-input label { width: 130px; }
+    }
+  </style>
+</head>
+<body class="light-mode">
+  <!-- Particles.js Background Container -->
+  <div id="particles-js"></div>
+  
+  <!-- Scrolling Header -->
+  <div class="header-marquee">
+    <marquee id="cryptoMarquee">Loading top crypto prices...</marquee>
+  </div>
+  
+  <div class="main-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Ethereum Tokens</h2>
+      <ul id="ethTokenList">
+        <li>Loading token prices...</li>
+      </ul>
+      <h2>GALACHAIN</h2>
+      <ul id="galaTokenList">
+        <li>Loading GALACHAIN token prices...</li>
+      </ul>
+      <ul id="galaManualList">
+        <li><span class="token">Flora</span>: COMING SOON</li>
+        <li><span class="token">Morphsters</span>: COMING SOON</li>
+      </ul>
+    </aside>
+    
+    <!-- Main Content -->
+    <div class="content">
+      <header>
+        <img src="metaflora-green-logo.png" alt="MetaFlora Logo" class="logo">
+        <h1>MetaFlora Exchange</h1>
+      </header>
+      <button id="connectWallet" class="btn">Connect Wallet</button>
+      <div id="walletAddress">Not connected.</div>
+      
+      <!-- Tab Bar -->
+      <div class="tab-bar" id="tabBar" style="display: none;">
+        <button id="swapTab" class="active">Swap</button>
+        <button id="limitTab">Limit Orders</button>
+        <button id="liqTab">Liquidity Pools</button>
+        <button id="poolsTab">Pools</button>
+        <button id="tokensTab">Tokens</button>
+        <button id="txTab">Transactions</button>
+      </div>
+      
+      <!-- Swap Interface (Placeholder) -->
+      <div class="swap-container" id="swapContainer">
+        <h2>Swap Tokens</h2>
+        <div class="swap-input">
+          <label for="fromAmount">Amount:</label>
+          <input id="fromAmount" type="number" placeholder="0.0" min="0">
+          <select id="fromToken">
+            <option value="ETH">ETH ($2000)</option>
+            <option value="USDC">USDC ($1)</option>
+            <option value="DAI">DAI ($1)</option>
+            <option value="UNI">UNI ($5)</option>
+          </select>
+        </div>
+        <button id="switchButton" class="btn">&#8646;</button>
+        <div class="swap-input">
+          <label for="toAmount">Amount:</label>
+          <input id="toAmount" type="number" placeholder="0.0" disabled>
+          <select id="toToken">
+            <option value="USDC">USDC ($1)</option>
+            <option value="DAI">DAI ($1)</option>
+            <option value="UNI">UNI ($5)</option>
+            <option value="ETH">ETH ($2000)</option>
+          </select>
+        </div>
+        <button id="swapButton" class="btn">Swap</button>
+        <div id="swapStatus"></div>
+        <div class="swap-details" id="gasFee">Estimated Gas Fee: Loading...</div>
+        <div class="swap-details" id="slippage">Estimated Slippage: Loading...</div>
+      </div>
+      
+      <!-- Limit Orders Interface (Unique IDs) -->
+      <div class="limitorder-container" id="limitContainer">
+        <h2>Limit Orders</h2>
+        <p style="text-align: left; margin-bottom: 15px; font-size: 0.95em;">
+          Set a limit order by choosing the token you wish to sell. The buy amount is auto‑calculated based on the current market price and your selected price condition.
+        </p>
+        <div class="limit-input">
+          <label for="sellTokenLimit">Sell Token:</label>
+          <select id="sellTokenLimit">
+            <option value="FLORA" selected>FLORA</option>
+            <option value="DAI">DAI</option>
+            <option value="ETH">ETH</option>
+            <option value="USDC">USDC</option>
+          </select>
+        </div>
+        <div class="limit-input">
+          <label for="sellAmountLimit">Sell Amount:</label>
+          <input id="sellAmountLimit" type="number" placeholder="500" value="500" min="0">
+        </div>
+        <div class="limit-input">
+          <label for="buyTokenLimit">Buy Token:</label>
+          <select id="buyTokenLimit">
+            <option value="FLORA" selected>FLORA</option>
+            <option value="DAI">DAI</option>
+            <option value="ETH">ETH</option>
+            <option value="USDC">USDC</option>
+          </select>
+        </div>
+        <div class="limit-input">
+          <label for="buyAmountLimit">Buy Amount:</label>
+          <input id="buyAmountLimit" type="number" placeholder="500.000000" value="500.000000" readonly>
+        </div>
+        <div class="limit-input">
+          <label for="priceConditionLimit">Price Condition:</label>
+          <select id="priceConditionLimit">
+            <option value="market" selected>Market</option>
+            <option value="1">+1%</option>
+            <option value="5">+5%</option>
+            <option value="10">+10%</option>
+          </select>
+        </div>
+        <div class="limit-input">
+          <label for="limitExpiryLimit">Expiration:</label>
+          <select id="limitExpiryLimit">
+            <option value="1" selected>1 Day</option>
+            <option value="7">1 Week</option>
+            <option value="30">1 Month</option>
+            <option value="365">1 Year</option>
+          </select>
+        </div>
+        <button id="placeLimitOrder" class="btn">Place Limit Order</button>
+        <div id="limitStatus"></div>
+        <h3 class="section-title">Your Limit Orders</h3>
+        <table id="limitOrdersTable">
+          <thead>
+            <tr>
+              <th>Sell Token</th>
+              <th>Sell Amt</th>
+              <th>Buy Token</th>
+              <th>Buy Amt</th>
+              <th>Price Condition</th>
+              <th>Expiration</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="7">No limit orders yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Liquidity Pools Interface (Unique IDs) -->
+      <div class="liquidity-container" id="liquidityContainer">
+        <h2>Liquidity Pools</h2>
+        <p class="description" style="text-align: left; margin-bottom: 15px; font-size: 0.95em;">
+          Provide liquidity by selecting two tokens. The default selection is FLORA for Token A and USDC for Token B.
+          Lock your liquidity for a chosen duration and fee tier to earn dynamic rewards.
+          Additionally, set a price range to concentrate your liquidity.
+        </p>
+        <div class="liquidity-input">
+          <label for="liqTokenA">Token A:</label>
+          <select id="liqTokenA">
+            <option value="FLORA" selected>Flora</option>
+            <option value="ETH">ETH</option>
+            <option value="USDC">USDC</option>
+            <option value="DAI">DAI</option>
+          </select>
+          <input id="liqAmountA" type="number" placeholder="Amount" min="0">
+        </div>
+        <div class="liquidity-input">
+          <label for="liqTokenB">Token B:</label>
+          <select id="liqTokenB">
+            <option value="USDC" selected>USDC</option>
+            <option value="FLORA">Flora</option>
+            <option value="ETH">ETH</option>
+            <option value="DAI">DAI</option>
+          </select>
+          <input id="liqAmountB" type="number" placeholder="Amount" min="0">
+        </div>
+        <h3 class="section-title">Lock Duration & Reward Multiplier</h3>
+        <div class="lock-options" id="lockOptions">
+          <div class="option lock-option" data-duration="3" data-multiplier="1">3 Months<br>(1x)</div>
+          <div class="option lock-option" data-duration="6" data-multiplier="1.5">6 Months<br>(1.5x)</div>
+          <div class="option lock-option" data-duration="12" data-multiplier="2">1 Year<br>(2x)</div>
+        </div>
+        <h3 class="section-title">Fee Tier</h3>
+        <div class="fee-options" id="feeOptions">
+          <div class="option fee-option" data-fee="0.01">0.01%<br>(Very Stable)</div>
+          <div class="option fee-option" data-fee="0.05">0.05%<br>(Stable)</div>
+          <div class="option fee-option" data-fee="0.3">0.3%<br>(Most Pairs)</div>
+          <div class="option fee-option" data-fee="1">1%<br>(Exotic)</div>
+        </div>
+        <h3 class="section-title">Set Price Range</h3>
+        <p style="text-align: left; font-size: 0.9em;">
+          Full range provides continuous market participation but may incur higher impermanent loss.
+          Custom range allows you to concentrate liquidity within specific price bounds for better capital efficiency.
+        </p>
+        <div class="range-options" id="rangeOptions">
+          <div class="option range-option" data-range="full">Full Range</div>
+          <div class="option range-option" data-range="custom">Custom Range</div>
+        </div>
+        <div class="custom-range" id="customRangeInputs">
+          <input id="minPrice" type="number" placeholder="Min Price" min="0" step="any">
+          <input id="maxPrice" type="number" placeholder="Max Price" min="0" step="any">
+        </div>
+        <button id="provideLiquidity" class="btn">Provide Liquidity</button>
+        <div id="liquidityStatus"></div>
+        <button id="backToSwap" class="btn">Back to Swap</button>
+      </div>
+      
+      <!-- Pools Interface (Placeholder) -->
+      <div class="pools-container" id="poolsContainer">
+        <h2>Pools</h2>
+        <p style="text-align: left; margin-bottom: 15px; font-size: 0.95em;">
+          Explore liquidity pools with their Total Value Locked (TVL) and recent transactions.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Pool</th>
+              <th>TVL</th>
+              <th>Transactions</th>
+            </tr>
+          </thead>
+          <tbody id="poolsTable">
+            <tr><td colspan="3">Loading pools data...</td></tr>
+          </tbody>
+        </table>
+        <div class="graph-container">
+          <canvas id="tvlChart"></canvas>
+        </div>
+        <div class="graph-container">
+          <canvas id="volumeChart"></canvas>
+        </div>
+      </div>
+      
+      <!-- Tokens Interface (Placeholder) -->
+      <div class="tokens-container" id="tokensContainer">
+        <h2>Tokens</h2>
+        <p style="text-align: left; margin-bottom: 15px; font-size: 0.95em;">
+          View token details including price, 1h change, 1d change, FDV, and performance. Use the filters to view by chain and volume period.
+        </p>
+        <div style="margin-bottom: 15px;">
+          <select id="chainFilter">
+            <option value="ethereum">Ethereum</option>
+            <option value="bsc">BSC</option>
+            <option value="polygon">Polygon</option>
+            <option value="galachain">Galachain</option>
+          </select>
+          <select id="volumeFilter">
+            <option value="1h">1h Volume</option>
+            <option value="1d">1 Day Volume</option>
+            <option value="1w">1 Week Volume</option>
+            <option value="1y">1 Year Volume</option>
+          </select>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Token Name</th>
+              <th>Price</th>
+              <th>1h</th>
+              <th>1d</th>
+              <th>FDV</th>
+            </tr>
+          </thead>
+          <tbody id="tokensTable">
+            <tr><td colspan="5">Loading tokens data...</td></tr>
+          </tbody>
+        </table>
+        <div class="graph-container">
+          <canvas id="tokenChart"></canvas>
+        </div>
+      </div>
+      
+      <!-- Transactions Interface (Placeholder) -->
+      <div class="transactions-container" id="transactionsContainer">
+        <h2>Transactions</h2>
+        <p style="text-align: left; margin-bottom: 15px; font-size: 0.95em;">
+          Recent transactions on the MetaFlora platform.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Details</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody id="transactionsTable">
+            <tr><td colspan="5">No transactions yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mode Toggle Button (Bottom Right) -->
+  <div id="modeToggle">Dark Mode</div>
+  
+  <!-- Include ethers.js -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      /**************************************************
+       * Mode Toggle Logic
+       **************************************************/
+      const modeToggle = document.getElementById("modeToggle");
+      modeToggle.addEventListener("click", () => {
+        if(document.body.classList.contains("dark-mode")){
+          document.body.classList.remove("dark-mode");
+          document.body.classList.add("light-mode");
+          modeToggle.innerText = "Dark Mode";
+        } else {
+          document.body.classList.remove("light-mode");
+          document.body.classList.add("dark-mode");
+          modeToggle.innerText = "Light Mode";
+        }
+      });
+      
+      /**************************************************
+       * Global Variables & Signature Helper
+       **************************************************/
+      let globalAccount = null;
+      let transactions = [];
+      
+      async function signAction(message) {
+        if (window.ethereum) {
+          try {
+            const accounts = await window.ethereum.request({ method: "eth_accounts" });
+            if (accounts.length === 0) throw new Error("No accounts found");
+            globalAccount = accounts[0];
+            const signature = await window.ethereum.request({
+              method: "personal_sign",
+              params: [message, globalAccount],
+            });
+            return signature;
+          } catch (err) {
+            console.error("Signature error:", err);
+            throw err;
+          }
+        } else {
+          throw new Error("MetaMask not installed");
+        }
+      }
+      
+      /**************************************************
+       * Limit Orders: Auto-Calculate Buy Amount
+       **************************************************/
+      const demoPrices = { FLORA: 0.01, ETH: 2000, USDC: 1, DAI: 1, UNI: 5 };
+      function updateLimitBuyAmount() {
+        const sellAmount = parseFloat(document.getElementById("sellAmountLimit").value) || 0;
+        const sellToken = document.getElementById("sellTokenLimit").value;
+        const buyToken = document.getElementById("buyTokenLimit").value;
+        const priceCondition = document.getElementById("priceConditionLimit").value;
+        let offset = (priceCondition === "market") ? 0 : parseFloat(priceCondition) / 100;
+        const marketRate = demoPrices[sellToken] / demoPrices[buyToken];
+        const limitRate = marketRate * (1 + offset);
+        const buyAmount = sellAmount * limitRate;
+        document.getElementById("buyAmountLimit").value = buyAmount.toFixed(6);
+      }
+      document.getElementById("sellAmountLimit").addEventListener("input", updateLimitBuyAmount);
+      document.getElementById("priceConditionLimit").addEventListener("change", updateLimitBuyAmount);
+      document.getElementById("sellTokenLimit").addEventListener("change", updateLimitBuyAmount);
+      document.getElementById("buyTokenLimit").addEventListener("change", updateLimitBuyAmount);
+      
+      /**************************************************
+       * Wallet Connection
+       **************************************************/
+      async function connectWallet() {
+        if (window.ethereum) {
+          try {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            if (accounts.length > 0) {
+              globalAccount = accounts[0];
+              document.getElementById("walletAddress").innerText = "Connected: " + globalAccount;
+              const connectBtn = document.getElementById("connectWallet");
+              connectBtn.innerText = "Connected to MetaFlora Exchange";
+              connectBtn.disabled = true;
+              document.getElementById("tabBar").style.display = "flex";
+              showSwap();
+              updateConversion();
+              window.ethereum.on('accountsChanged', (newAccounts) => {
+                if (newAccounts.length > 0) {
+                  globalAccount = newAccounts[0];
+                  document.getElementById("walletAddress").innerText = "Connected: " + globalAccount;
+                } else {
+                  document.getElementById("walletAddress").innerText = "Not connected.";
+                  hideAllTabs();
+                  connectBtn.innerText = "Connect Wallet";
+                  connectBtn.disabled = false;
+                }
+              });
+            } else {
+              document.getElementById("walletAddress").innerText = "No accounts found.";
+            }
+          } catch (error) {
+            console.error("Error during connection:", error);
+            document.getElementById("walletAddress").innerText = "Connection rejected.";
+          }
+        } else {
+          document.getElementById("walletAddress").innerText = "MetaMask not detected. Please install MetaMask.";
+        }
+      }
+      document.getElementById("connectWallet").addEventListener("click", connectWallet);
+      
+      /**************************************************
+       * Tab Switching Logic
+       **************************************************/
+      function hideAllTabs() {
+        document.getElementById("swapContainer").style.display = "none";
+        document.getElementById("limitContainer").style.display = "none";
+        document.getElementById("liquidityContainer").style.display = "none";
+        document.getElementById("poolsContainer").style.display = "none";
+        document.getElementById("tokensContainer").style.display = "none";
+        document.getElementById("transactionsContainer").style.display = "none";
+        document.querySelectorAll(".tab-bar button").forEach(btn => btn.classList.remove("active"));
+      }
+      function showSwap() { hideAllTabs(); document.getElementById("swapContainer").style.display = "block"; document.getElementById("swapTab").classList.add("active"); }
+      function showLimit() { hideAllTabs(); document.getElementById("limitContainer").style.display = "block"; document.getElementById("limitTab").classList.add("active"); }
+      function showLiquidity() { hideAllTabs(); document.getElementById("liquidityContainer").style.display = "block"; document.getElementById("liqTab").classList.add("active"); }
+      function showPools() { hideAllTabs(); document.getElementById("poolsContainer").style.display = "block"; document.getElementById("poolsTab").classList.add("active"); }
+      function showTokens() { hideAllTabs(); document.getElementById("tokensContainer").style.display = "block"; document.getElementById("tokensTab").classList.add("active"); }
+      function showTransactions() { hideAllTabs(); document.getElementById("transactionsContainer").style.display = "block"; document.getElementById("txTab").classList.add("active"); }
+      document.getElementById("swapTab").addEventListener("click", showSwap);
+      document.getElementById("limitTab").addEventListener("click", showLimit);
+      document.getElementById("liqTab").addEventListener("click", showLiquidity);
+      document.getElementById("poolsTab").addEventListener("click", showPools);
+      document.getElementById("tokensTab").addEventListener("click", showTokens);
+      document.getElementById("txTab").addEventListener("click", showTransactions);
+      document.getElementById("backToSwap").addEventListener("click", showSwap);
+      
+      /**************************************************
+       * Fetch Top Crypto Prices for Scrolling Header
+       **************************************************/
+      async function fetchTopCrypto() {
+        try {
+          const response = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1");
+          const data = await response.json();
+          let marqueeText = "";
+          data.forEach(coin => { marqueeText += `${coin.name}: $${coin.current_price} | `; });
+          marqueeText += "GALA, MUSIC, FILM, Flora: COMING SOON, Magneto: COMING SOON, Morphsters: COMING SOON";
+          document.getElementById("cryptoMarquee").innerText = marqueeText;
+        } catch (error) {
+          console.error("Error fetching top crypto prices:", error);
+          document.getElementById("cryptoMarquee").innerText = "Error loading prices.";
+        }
+      }
+      fetchTopCrypto();
+      setInterval(fetchTopCrypto, 60000);
+      
+      /**************************************************
+       * Fetch Ethereum Token Prices for Sidebar
+       **************************************************/
+      async function fetchEthereumTokens() {
+        const tokenIDs = ["ethereum", "usd-coin", "dai", "chainlink", "uniswap", "wrapped-ethereum"];
+        try {
+          const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=" + tokenIDs.join(",") + "&vs_currencies=usd");
+          const data = await response.json();
+          let tokenListHTML = "";
+          tokenIDs.forEach(id => {
+            const price = data[id]?.usd ? data[id].usd : "N/A";
+            const tokenName = id.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+            tokenListHTML += `<li><span class="token">${tokenName}</span>: $${price}</li>`;
+          });
+          document.getElementById("ethTokenList").innerHTML = tokenListHTML;
+        } catch (error) {
+          console.error("Error fetching Ethereum tokens:", error);
+          document.getElementById("ethTokenList").innerHTML = "<li>Error loading token prices.</li>";
+        }
+      }
+      fetchEthereumTokens();
+      setInterval(fetchEthereumTokens, 60000);
+      
+      /**************************************************
+       * Fetch Galachain Token Prices for GALACHAIN Section
+       **************************************************/
+      async function fetchGalachainTokens() {
+        let galaPrice = "N/A";
+        try {
+          const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=gala&vs_currencies=usd");
+          const data = await response.json();
+          if (data.gala && data.gala.usd) { galaPrice = data.gala.usd; }
+        } catch (error) { console.error("Error fetching GALA price:", error); }
+        const musicAddress = "0xd8c0b13b551718b808fc97ead59499d5ef862775".toLowerCase();
+        const filmAddress = "0xe344fb85b4fab79e0ef32ce77c00732ce8566244".toLowerCase();
+        const magnetoAddress = "0x240cae3c5afa2564c6ffcfa7ce5b3f1247dfa02a".toLowerCase();
+        let contractPrices = {};
+        try {
+          const url = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=" +
+                      `${musicAddress},${filmAddress},${magnetoAddress}` +
+                      "&vs_currencies=usd";
+          const response = await fetch(url);
+          const data = await response.json();
+          contractPrices.music = data[musicAddress]?.usd || "N/A";
+          contractPrices.film = data[filmAddress]?.usd || "N/A";
+          contractPrices.magneto = data[magnetoAddress]?.usd || "N/A";
+        } catch (error) {
+          console.error("Error fetching Galachain contract prices:", error);
+          contractPrices.music = contractPrices.film = contractPrices.magneto = "N/A";
+        }
+        let tokenListHTML = "";
+        tokenListHTML += `<li><span class="token">GALA</span>: $${galaPrice}</li>`;
+        tokenListHTML += `<li><span class="token">MUSIC</span>: $${contractPrices.music}</li>`;
+        tokenListHTML += `<li><span class="token">FILM</span>: $${contractPrices.film}</li>`;
+        tokenListHTML += `<li><span class="token">Magneto</span>: $${contractPrices.magneto}</li>`;
+        document.getElementById("galaTokenList").innerHTML = tokenListHTML;
+      }
+      fetchGalachainTokens();
+      setInterval(fetchGalachainTokens, 60000);
+      
+      /**************************************************
+       * Live Conversion & Gas Fee/Slippage (Swap)
+       **************************************************/
+      const prices = { ETH: 2000, USDC: 1, DAI: 1, UNI: 5, FLORA: 0.01 };
+      async function updateConversion() {
+        const fromAmount = parseFloat(document.getElementById("fromAmount").value) || 0;
+        const fromToken = document.getElementById("fromToken").value;
+        const toToken = document.getElementById("toToken").value;
+        const toAmountInput = document.getElementById("toAmount");
+        if (fromToken === toToken) { 
+          toAmountInput.value = fromAmount; 
+        } else {
+          const fromValueUSD = fromAmount * prices[fromToken];
+          const toAmount = fromValueUSD / prices[toToken];
+          toAmountInput.value = toAmount.toFixed(6);
+        }
+        await updateGasAndSlippage(fromAmount, fromToken);
+      }
+      async function updateGasAndSlippage(fromAmount, fromToken) {
+        const gasFeeElem = document.getElementById("gasFee");
+        const slippageElem = document.getElementById("slippage");
+        try {
+          let gasResponse = await fetch("https://www.etherchain.org/api/gasPriceOracle");
+          let gasData = await gasResponse.json();
+          let gasPrice = gasData.standard;
+          let ethResponse = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
+          let ethData = await ethResponse.json();
+          let ethPrice = ethData.ethereum.usd;
+          let gasLimit = 150000;
+          let gasFeeUSD = (gasLimit * gasPrice * ethPrice) / 1e9;
+          gasFeeElem.innerText = "Estimated Gas Fee: $" + gasFeeUSD.toFixed(2);
+        } catch (error) {
+          console.error("Error fetching gas data:", error);
+          gasFeeElem.innerText = "Estimated Gas Fee: N/A";
+        }
+        let tokenPrice = prices[fromToken];
+        let tradeUSD = fromAmount * tokenPrice;
+        let slippage;
+        if (tradeUSD < 100) { slippage = 0.5; }
+        else if (tradeUSD < 1000) { slippage = 1.0; }
+        else { slippage = 2.0; }
+        slippageElem.innerText = "Estimated Slippage: " + slippage.toFixed(1) + "%";
+      }
+      document.getElementById("fromAmount").addEventListener("input", updateConversion);
+      document.getElementById("fromToken").addEventListener("change", updateConversion);
+      document.getElementById("toToken").addEventListener("change", updateConversion);
+      
+      /**************************************************
+       * Swap Logic with Signature & Recording
+       **************************************************/
+      async function performSwap() {
+        const fromAmount = parseFloat(document.getElementById("fromAmount").value) || 0;
+        const fromToken = document.getElementById("fromToken").value;
+        const toToken = document.getElementById("toToken").value;
+        const toAmount = document.getElementById("toAmount").value;
+        const gasFeeText = document.getElementById("gasFee").innerText;
+        const slippageText = document.getElementById("slippage").innerText;
+        const message = `Swap: ${fromAmount} ${fromToken} for ${toAmount} ${toToken}`;
+        try {
+          await signAction(message);
+          const timestamp = new Date().toLocaleString();
+          transactions.push({ type: "swap", message, timestamp });
+          updateTransactionsTable();
+          document.getElementById("swapStatus").innerText = `Swapped ${fromAmount} ${fromToken} for ${toAmount} ${toToken}. ${gasFeeText}, ${slippageText}.`;
+        } catch (err) {
+          document.getElementById("swapStatus").innerText = "Swap canceled or signature rejected.";
+        }
+      }
+      document.getElementById("swapButton").addEventListener("click", performSwap);
+      
+      /**************************************************
+       * Switch Button Logic
+       **************************************************/
+      function switchTokens() {
+        const fromSelect = document.getElementById("fromToken");
+        const toSelect = document.getElementById("toToken");
+        const tempToken = fromSelect.value;
+        fromSelect.value = toSelect.value;
+        toSelect.value = tempToken;
+        const fromInput = document.getElementById("fromAmount");
+        const toInput = document.getElementById("toAmount");
+        const tempAmount = fromInput.value;
+        fromInput.value = toInput.value;
+        updateConversion();
+      }
+      document.getElementById("switchButton").addEventListener("click", switchTokens);
+      
+      /**************************************************
+       * Register Clicks for Liquidity Pools Options
+       **************************************************/
+      document.querySelectorAll("#lockOptions .lock-option").forEach(option => {
+        option.addEventListener("click", () => {
+          document.querySelectorAll("#lockOptions .lock-option").forEach(opt => opt.classList.remove("active"));
+          option.classList.add("active");
+        });
+      });
+      document.querySelectorAll("#feeOptions .fee-option").forEach(option => {
+        option.addEventListener("click", () => {
+          document.querySelectorAll("#feeOptions .fee-option").forEach(opt => opt.classList.remove("active"));
+          option.classList.add("active");
+        });
+      });
+      document.querySelectorAll("#rangeOptions .range-option").forEach(option => {
+        option.addEventListener("click", () => {
+          document.querySelectorAll("#rangeOptions .range-option").forEach(opt => opt.classList.remove("active"));
+          option.classList.add("active");
+          const selected = option.getAttribute("data-range");
+          if (selected === "custom") {
+            document.getElementById("customRangeInputs").style.display = "flex";
+          } else {
+            document.getElementById("customRangeInputs").style.display = "none";
+          }
+        });
+      });
+      
+      /**************************************************
+       * Limit Orders Logic: Place Limit Order Button with MetaMask Signature
+       **************************************************/
+      document.getElementById("placeLimitOrder").addEventListener("click", async function() {
+        console.log("Place Limit Order button clicked");
+        const sellToken = document.getElementById("sellTokenLimit").value;
+        const sellAmount = document.getElementById("sellAmountLimit").value;
+        const buyToken = document.getElementById("buyTokenLimit").value;
+        const buyAmount = document.getElementById("buyAmountLimit").value;
+        const priceCondition = document.getElementById("priceConditionLimit").value;
+        const expiry = document.getElementById("limitExpiryLimit").value;
+        const timestamp = new Date().toLocaleString();
+        
+        if (!sellToken || !sellAmount || !buyToken || !buyAmount) {
+          alert("Please fill in all fields.");
+          return;
+        }
+        
+        const message = `Limit Order: Sell ${sellAmount} ${sellToken} for ${buyAmount} ${buyToken} at ${priceCondition} condition, expiry ${expiry} day(s)`;
+        try {
+          await signAction(message);
+          transactions.push({ type: "limit order", message, timestamp });
+          updateTransactionsTable();
+          const tbody = document.getElementById("limitOrdersTable").querySelector("tbody");
+          if (tbody.children.length === 1 && tbody.children[0].children[0].getAttribute("colspan") === "7") {
+            tbody.innerHTML = "";
+          }
+          const newRow = document.createElement("tr");
+          newRow.innerHTML = `
+            <td>${sellToken}</td>
+            <td>${sellAmount}</td>
+            <td>${buyToken}</td>
+            <td>${buyAmount}</td>
+            <td>${priceCondition}</td>
+            <td>${expiry} Day(s)</td>
+            <td>${timestamp}</td>
+          `;
+          tbody.appendChild(newRow);
+          alert("Limit order placed, transaction signed via MetaMask!");
+        } catch (err) {
+          alert("Limit order canceled or signature rejected.");
+        }
+      });
+      
+      /**************************************************
+       * Liquidity Pools Logic with Signature, Recording & Pool Update
+       **************************************************/
+      async function provideLiquidity() {
+        const tokenA = document.getElementById("liqTokenA").value;
+        const amountA = document.getElementById("liqAmountA").value;
+        const tokenB = document.getElementById("liqTokenB").value;
+        const amountB = document.getElementById("liqAmountB").value;
+        if (!tokenA || !tokenB || !amountA || !amountB) {
+          alert("Please fill in all liquidity fields.");
+          return;
+        }
+        const lockElem = document.querySelector("#lockOptions .lock-option.active");
+        const feeElem = document.querySelector("#feeOptions .fee-option.active");
+        const selectedLock = lockElem ? lockElem.getAttribute("data-duration") : 3;
+        const selectedMult = lockElem ? lockElem.getAttribute("data-multiplier") : 1;
+        const selectedFee = feeElem ? feeElem.getAttribute("data-fee") : "0.3";
+        let priceRangeInfo = "";
+        const rangeElem = document.querySelector("#rangeOptions .range-option.active");
+        const selectedRange = rangeElem ? rangeElem.getAttribute("data-range") : "full";
+        if (selectedRange === "custom") {
+          const minPrice = document.getElementById("minPrice").value;
+          const maxPrice = document.getElementById("maxPrice").value;
+          if (!minPrice || !maxPrice) {
+            alert("Please enter both minimum and maximum prices for your custom range.");
+            return;
+          }
+          priceRangeInfo = `Custom Price Range: [Min: ${minPrice}, Max: ${maxPrice}]`;
+        } else {
+          priceRangeInfo = "Full Range liquidity";
+        }
+        const message = `Liquidity: Lock ${tokenA} for ${selectedLock} months (multiplier: ${selectedMult}x, fee tier: ${selectedFee}%), ${priceRangeInfo}. Contributed ${amountA} ${tokenA} & ${amountB} ${tokenB}.`;
+        try {
+          await signAction(message);
+          const timestamp = new Date().toLocaleString();
+          transactions.push({ type: "liquidity", message, timestamp });
+          updateTransactionsTable();
+          alert(`Flourishing! You just locked ${tokenA} for ${selectedLock} months (reward multiplier: ${selectedMult}x, fee tier: ${selectedFee}%).
+You contributed ${amountA} of ${tokenA} and ${amountB} of ${tokenB} to the liquidity pool.
+${priceRangeInfo}.`);
+          addNewPool({ pool: `${tokenA}/${tokenB}`, tvl: Math.floor(Math.random() * 1000000 + 500000), tx: Math.floor(Math.random() * 100 + 50) });
+        } catch (err) {
+          alert("Liquidity provision canceled or signature rejected.");
+        }
+      }
+      document.getElementById("provideLiquidity").addEventListener("click", provideLiquidity);
+      
+      function addNewPool(poolData) {
+        const poolsTable = document.getElementById("poolsTable");
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `<td>${poolData.pool}</td><td>$${poolData.tvl.toLocaleString()}</td><td>${poolData.tx}</td>`;
+        poolsTable.appendChild(newRow);
+      }
+      
+      /**************************************************
+       * Placeholder Data for Pools, Tokens, Transactions
+       **************************************************/
+      function loadPoolsData() {
+        const poolsTable = document.getElementById("poolsTable");
+        poolsTable.innerHTML = `
+          <tr><td>FLORA/USDC</td><td>$1,200,000</td><td>150</td></tr>
+          <tr><td>ETH/DAI</td><td>$2,500,000</td><td>200</td></tr>`;
+        const tvlCtx = document.getElementById("tvlChart").getContext("2d");
+        new Chart(tvlCtx, {
+          type: 'line',
+          data: {
+            labels: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5"],
+            datasets: [{
+              label: "MetaFlora TVL",
+              data: [1000000, 1200000, 1150000, 1300000, 1250000],
+              borderColor: "#4caf50",
+              backgroundColor: "rgba(76,175,80,0.2)",
+              fill: true
+            }]
+          },
+          options: { responsive: true }
+        });
+        const volCtx = document.getElementById("volumeChart").getContext("2d");
+        new Chart(volCtx, {
+          type: 'bar',
+          data: {
+            labels: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5"],
+            datasets: [{
+              label: "MetaFlora Volume",
+              data: [50000, 75000, 60000, 90000, 85000],
+              backgroundColor: "#512da8"
+            }]
+          },
+          options: { responsive: true }
+        });
+      }
+      function loadTokensData() {
+        const tokensTable = document.getElementById("tokensTable");
+        tokensTable.innerHTML = `
+          <tr><td>FLORA</td><td>$0.01</td><td>+0.1%</td><td>+0.5%</td><td>$10M</td></tr>
+          <tr><td>USDC</td><td>$1</td><td>0%</td><td>0%</td><td>$500M</td></tr>`;
+        const tokenCtx = document.getElementById("tokenChart").getContext("2d");
+        new Chart(tokenCtx, {
+          type: 'line',
+          data: {
+            labels: ["1h", "1d", "1w", "1m", "1y"],
+            datasets: [{
+              label: "Token Performance",
+              data: [0, 0.2, 0.5, 1.2, 2.0],
+              borderColor: "#4caf50",
+              backgroundColor: "rgba(76,175,80,0.2)",
+              fill: true
+            }]
+          },
+          options: { responsive: true }
+        });
+      }
+      function loadTransactionsData() {
+        const txTable = document.getElementById("transactionsTable");
+        if (transactions.length === 0) {
+          txTable.innerHTML = `<tr><td colspan="5">No transactions yet.</td></tr>`;
+        } else {
+          let rows = "";
+          transactions.forEach(tx => {
+            rows += `<tr><td>${tx.type}</td><td>${globalAccount}</td><td>-</td><td>${tx.message}</td><td>${tx.timestamp}</td></tr>`;
+          });
+          txTable.innerHTML = rows;
+        }
+      }
+      function updateTransactionsTable() { loadTransactionsData(); }
+      
+      loadPoolsData();
+      loadTokensData();
+      loadTransactionsData();
+      
+      /**************************************************
+       * Refresh API Calls at Fixed Rate
+       **************************************************/
+      setInterval(updateConversion, 30000);
+      
+      /**************************************************
+       * Initialize Particles.js
+       **************************************************/
+      particlesJS("particles-js", {
+        "particles": {
+          "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+          "color": { "value": "#ffffff" },
+          "shape": {
+            "type": "circle",
+            "stroke": { "width": 0, "color": "#000000" },
+            "polygon": { "nb_sides": 5 }
+          },
+          "opacity": { "value": 0.5, "random": false },
+          "size": { "value": 3, "random": true },
+          "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+          "move": { "enable": true, "speed": 4, "direction": "none", "random": false, "straight": false, "out_mode": "out" }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": { "enable": true, "mode": "repulse" },
+            "onclick": { "enable": true, "mode": "push" },
+            "resize": true
+          },
+          "modes": {
+            "repulse": { "distance": 100, "duration": 0.4 },
+            "push": { "particles_nb": 4 }
+          }
+        },
+        "retina_detect": true
+      });
+    });
+  </script>
+</body>
+</html>
